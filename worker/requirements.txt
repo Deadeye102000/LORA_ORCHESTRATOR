@@ -3,4 +3,7 @@ torch
 transformers
 peft
 trl
-pydantic
+datasets
+boto3
+accelerate
+bitsandbytes
