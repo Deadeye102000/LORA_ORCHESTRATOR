@@ -1,19 +1,28 @@
 import datetime
-
-def utcnow_naive():
-    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, ForeignKey, JSON
+from sqlalchemy import (
+    create_engine,
+    Column,
+    Integer,
+    String,
+    Float,
+    DateTime,
+    ForeignKey,
+    JSON,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
 DATABASE_URL = "sqlite:///./lora_orchestrator.db"
 
-engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False}
-)
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+
+def utcnow_naive():
+    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+
 
 class Worker(Base):
     __tablename__ = "workers"
@@ -26,6 +35,7 @@ class Worker(Base):
     # Relationships
     jobs = relationship("Job", back_populates="worker")
 
+
 class Job(Base):
     __tablename__ = "jobs"
 
@@ -33,16 +43,20 @@ class Job(Base):
     base_model = Column(String, nullable=False)
     dataset_url = Column(String, nullable=False)
     hyperparameters = Column(JSON, nullable=False)
-    status = Column(String, default="PENDING")  # PENDING/TRAINING/COMPLETED/FAILED
+    # PENDING/TRAINING/COMPLETED/FAILED
+    status = Column(String, default="PENDING")
     worker_id = Column(String, ForeignKey("workers.id"), nullable=True)
     created_at = Column(DateTime, default=utcnow_naive)
     started_at = Column(DateTime, nullable=True)
     completed_at = Column(DateTime, nullable=True)
     weights_path = Column(String, nullable=True)
+    # VRAM requirement for capability-based scheduling
+    min_vram_gb = Column(Float, nullable=False, default=0.0)
 
     # Relationships
     worker = relationship("Worker", back_populates="jobs")
     metrics = relationship("Metric", back_populates="job", cascade="all, delete-orphan")
+
 
 class Metric(Base):
     __tablename__ = "metrics"
@@ -56,6 +70,7 @@ class Metric(Base):
 
     # Relationships
     job = relationship("Job", back_populates="metrics")
+
 
 # Dependency to get db session
 def get_db():
