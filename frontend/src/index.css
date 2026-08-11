@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    @apply bg-navy-900 text-gray-100 font-sans h-full;
+    min-height: 100vh;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-navy-800;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-navy-600 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-teal-500;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-navy-800 border border-navy-700 rounded-xl p-4 shadow-lg;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  .btn {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
+           transition-all duration-150 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-teal-400 text-navy-900 hover:bg-teal-500 active:scale-95 shadow-md shadow-teal-400/20;
+  }
+
+  .btn-ghost {
+    @apply btn bg-navy-700 text-gray-300 hover:bg-navy-600 hover:text-white active:scale-95;
+  }
+
+  .input {
+    @apply w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-sm text-gray-100
+           placeholder-gray-500 focus:outline-none focus:border-teal-400 focus:ring-1
+           focus:ring-teal-400/30 transition-colors;
+  }
+
+  .label {
+    @apply block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wide;
+  }
+
+  /* Worker node status dot */
+  .status-dot {
+    @apply w-2.5 h-2.5 rounded-full flex-shrink-0;
+  }
+}
+
+/* Glassmorphism overlay for modal backdrop */
+.glass-backdrop {
+  background: rgba(13, 17, 23, 0.75);
+  backdrop-filter: blur(8px);
+}
+
+/* Subtle glow on busy worker cards */
+.glow-busy {
+  box-shadow: 0 0 0 1px rgba(240, 165, 0, 0.3), 0 4px 20px rgba(240, 165, 0, 0.12);
+}
+.glow-idle {
+  box-shadow: 0 0 0 1px rgba(46, 160, 67, 0.25), 0 4px 20px rgba(46, 160, 67, 0.08);
+}
+.glow-teal {
+  box-shadow: 0 4px 24px rgba(0, 180, 216, 0.2);
+}
